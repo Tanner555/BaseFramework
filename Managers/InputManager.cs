@@ -36,6 +36,11 @@ namespace BaseFramework
             get { return GameMaster.thisInstance; }
         }
 
+        protected UnityMsgManager myUnityMsgManager
+        {
+            get { return UnityMsgManager.thisInstance; }
+        }
+
         public static InputManager thisInstance
         {
             get; protected set;
@@ -95,15 +100,6 @@ namespace BaseFramework
         protected virtual void Start()
         {
             SubToEvents();
-        }
-
-        // Update is called once per frame
-        protected virtual void Update()
-        {
-            InputSetup();
-            LeftMouseDownSetup();
-            RightMouseDownSetup();
-            StopMouseScrollWheelSetup();
         }
 
         protected virtual void OnDisable()
@@ -282,6 +278,14 @@ namespace BaseFramework
         #endregion
 
         #region Handlers
+        protected virtual void OnUpdate()
+        {
+            InputSetup();
+            LeftMouseDownSetup();
+            RightMouseDownSetup();
+            StopMouseScrollWheelSetup();
+        }
+
         protected virtual void HandleGamePaused(bool _isPaused)
         {
             if (_isPaused)
@@ -320,12 +324,14 @@ namespace BaseFramework
         {
             gamemaster.OnToggleIsGamePaused += HandleGamePaused;
             uiMaster.EventAnyUIToggle += HandleUiActiveSelf;
+            myUnityMsgManager.RegisterOnUpdate(OnUpdate);
         }
 
         void UnsubFromEvents()
         {
             gamemaster.OnToggleIsGamePaused -= HandleGamePaused;
             uiMaster.EventAnyUIToggle -= HandleUiActiveSelf;
+            myUnityMsgManager.DeregisterOnUpdate(OnUpdate);
         }
         #endregion
 
