@@ -278,7 +278,7 @@ namespace BaseFramework
         #endregion
 
         #region Handlers
-        protected virtual void OnUpdate()
+        protected virtual void OnUpdateHandler()
         {
             InputSetup();
             LeftMouseDownSetup();
@@ -324,14 +324,14 @@ namespace BaseFramework
         {
             gamemaster.OnToggleIsGamePaused += HandleGamePaused;
             uiMaster.EventAnyUIToggle += HandleUiActiveSelf;
-            myUnityMsgManager.RegisterOnUpdate(OnUpdate);
+            myUnityMsgManager.RegisterOnUpdate(OnUpdateHandler);
         }
 
         void UnsubFromEvents()
         {
             gamemaster.OnToggleIsGamePaused -= HandleGamePaused;
             uiMaster.EventAnyUIToggle -= HandleUiActiveSelf;
-            myUnityMsgManager.DeregisterOnUpdate(OnUpdate);
+            myUnityMsgManager.DeregisterOnUpdate(OnUpdateHandler);
         }
         #endregion
 

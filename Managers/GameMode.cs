@@ -27,6 +27,11 @@ namespace BaseFramework
             get { return GameMaster.thisInstance; }
         }
 
+        protected UnityMsgManager myUnityMsgManager
+        {
+            get { return UnityMsgManager.thisInstance;}
+        }
+
         public static GameMode thisInstance
         {
             get; protected set;
@@ -54,15 +59,16 @@ namespace BaseFramework
             //    Debug.LogWarning("There is no uimanager in the scene!");
         }
 
-        // Update is called once per frame
-        protected virtual void Update()
-        {
-
-        }
-
         protected virtual void OnDisable()
         {
             UnsubscribeFromEvents();
+        }
+        #endregion
+
+        #region Handlers
+        protected virtual void OnUpdateHandler()
+        {
+
         }
         #endregion
 
@@ -86,12 +92,12 @@ namespace BaseFramework
 
         protected virtual void SubscribeToEvents()
         {
-
+            myUnityMsgManager.RegisterOnUpdate(OnUpdateHandler);
         }
 
         protected virtual void UnsubscribeFromEvents()
         {
-
+            myUnityMsgManager.DeregisterOnUpdate(OnUpdateHandler);
         }
 
         protected virtual void StartServices()
