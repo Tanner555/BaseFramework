@@ -7,6 +7,18 @@ namespace BaseFramework
     public class GameMode : MonoBehaviour
     {
         #region Properties
+        protected virtual int RefreshRate
+        {
+            get
+            {
+                if (_refreshRate == -1)
+                    _refreshRate = Screen.currentResolution.refreshRate;
+
+                return _refreshRate;
+            }
+        }
+        private int _refreshRate = -1;
+
         protected UiMaster uiMaster
         {
             get { return UiMaster.thisInstance; }
@@ -49,6 +61,7 @@ namespace BaseFramework
             ResetGameModeStats();
             InitializeGameModeValues();
             SubscribeToEvents();
+            UpdateFrameRateLimit();
         }
 
         protected virtual void Start()
@@ -68,11 +81,24 @@ namespace BaseFramework
         #region Handlers
         protected virtual void OnUpdateHandler()
         {
-
+            UpdateFrameRateLimit();
         }
         #endregion
 
         #region Updaters and Resetters
+        protected virtual void UpdateFrameRateLimit()
+        {
+            if (QualitySettings.vSyncCount != 0)
+            {
+                //Frame Limit Doesn't Work If VSync Is Set Above 0
+                QualitySettings.vSyncCount = 0;
+            }
+            if (Application.targetFrameRate != RefreshRate)
+            {
+                Application.targetFrameRate = RefreshRate;
+            }
+        }
+
         protected virtual void UpdateGameModeStats()
         {
 
