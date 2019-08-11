@@ -10,16 +10,11 @@ namespace BaseFramework
 
         private bool bUpdateActionList = true;
         private List<System.Action> UpdateActionList = new List<System.Action>();
+        private List<System.Action> FixedUpdateActionList = new List<System.Action>();
 
         #endregion
 
         #region UnityMessages
-
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
 
         // Update is called once per frame
         void Update()
@@ -44,10 +39,33 @@ namespace BaseFramework
             }
         }
 
+        private void FixedUpdate()
+        {
+            if (bUpdateActionList && FixedUpdateActionList != null && FixedUpdateActionList.Count > 0)
+            {
+                foreach (var _fixedUpdateAction in FixedUpdateActionList)
+                {
+                    if (_fixedUpdateAction == null) { RemoveUnusableFixedUpdateAction(_fixedUpdateAction, true); }
+                    else
+                    {
+                        try
+                        {
+                            _fixedUpdateAction();
+                        }
+                        catch (System.Exception _updateErrno)
+                        {
+                            RemoveUnusableFixedUpdateAction(_fixedUpdateAction, false, _updateErrno.Message);
+                        }
+                    }
+                }
+            }
+        }
+
         void OnDisable()
         {
             bUpdateActionList = false;
             UpdateActionList.Clear();
+            FixedUpdateActionList.Clear();
         }
 
         #endregion
@@ -64,6 +82,16 @@ namespace BaseFramework
             UpdateActionList.Remove(updateMethodAction);
         }
 
+        public void RegisterOnFixedUpdate(System.Action fixedUpdateMethodAction)
+        {
+            FixedUpdateActionList.Add(fixedUpdateMethodAction);
+        }
+
+        public void DeregisterOnFixedUpdate(System.Action fixedUpdateMethodAction)
+        {
+            FixedUpdateActionList.Remove(fixedUpdateMethodAction);
+        }
+
         #endregion
 
         #region HelperMethods
@@ -74,6 +102,14 @@ namespace BaseFramework
                 $"Update Method Error From {updateMethodAction}: {errnoMsg}. Removing...";
             Debug.LogWarning(_errormsg);
             DeregisterOnUpdate(updateMethodAction);
+        }
+
+        private void RemoveUnusableFixedUpdateAction(System.Action fixedUpdateMethodAction, bool bWasNull, string errnoMsg = "")
+        {
+            string _errormsg = bWasNull ? $"Fixed Update Method {fixedUpdateMethodAction} was Null, Removing..." :
+                $"Fixed Update Method Error From {fixedUpdateMethodAction}: {errnoMsg}. Removing...";
+            Debug.LogWarning(_errormsg);
+            DeregisterOnFixedUpdate(fixedUpdateMethodAction);
         }
 
         #endregion
