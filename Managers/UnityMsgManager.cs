@@ -9,6 +9,8 @@ namespace BaseFramework
         #region FieldsAndProperties
 
         private bool bUpdateActionList = true;
+        [SerializeField] private bool bRemoveUpdateActionOnErrno = true;
+        [SerializeField] private bool bRemoveFixedUpdateActionOnErrno = true;
         private List<System.Action> UpdateActionList = new List<System.Action>();
         private List<System.Action> FixedUpdateActionList = new List<System.Action>();
 
@@ -32,14 +34,21 @@ namespace BaseFramework
                         RemoveUnusableUpdateAction(currentUpdateAction, true, i); 
                         break;
                     }
-                    try
+                    if (bRemoveUpdateActionOnErrno)
+                    {
+                        try
+                        {
+                            currentUpdateAction();
+                        }
+                        catch (System.Exception _updateErrno)
+                        {
+                            RemoveUnusableUpdateAction(currentUpdateAction, false, i, _updateErrno.Message);
+                            break;
+                        }
+                    }
+                    else
                     {
                         currentUpdateAction();
-                    }
-                    catch(System.Exception _updateErrno)
-                    {
-                        RemoveUnusableUpdateAction(currentUpdateAction, false, i, _updateErrno.Message);
-                        break;
                     }
                 }
             }
@@ -58,14 +67,21 @@ namespace BaseFramework
                         RemoveUnusableFixedUpdateAction(currentFixedUpdateAction, true, i); 
                         break;
                     }
-                    try
+                    if (bRemoveFixedUpdateActionOnErrno)
+                    {
+                        try
+                        {
+                            currentFixedUpdateAction();
+                        }
+                        catch (System.Exception _updateErrno)
+                        {
+                            RemoveUnusableFixedUpdateAction(currentFixedUpdateAction, false, i, _updateErrno.Message);
+                            break;
+                        }
+                    }
+                    else
                     {
                         currentFixedUpdateAction();
-                    }
-                    catch (System.Exception _updateErrno)
-                    {
-                        RemoveUnusableFixedUpdateAction(currentFixedUpdateAction, false, i, _updateErrno.Message);
-                        break;
                     }
                 }
             }
