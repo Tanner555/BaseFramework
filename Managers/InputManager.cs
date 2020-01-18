@@ -220,7 +220,19 @@ namespace BaseFramework
         {
             if (UiIsEnabled) return;
             scrollInputAxisValue = Input.GetAxis(scrollInputName);
-            if (Mathf.Abs(scrollInputAxisValue) > 0.0f)
+            if (Mathf.Abs(scrollInputAxisValue) < 0.05f)
+            {
+                //Not Using ScrollWheel, See if Holding '+,-' Keys
+                if (Input.GetKey(KeyCode.KeypadPlus))
+                {
+                    scrollInputAxisValue = 1.0f;
+                }
+                else if(Input.GetKey(KeyCode.KeypadMinus))
+                {
+                    scrollInputAxisValue = -1.0f;
+                }
+            }
+            if (Mathf.Abs(scrollInputAxisValue) > 0.05f)
             {
                 if (isLMHeldDown) return;
                 bScrollIsCurrentlyPositive = bScrollAxisIsPositive;
