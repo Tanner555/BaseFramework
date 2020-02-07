@@ -13,12 +13,14 @@ namespace BaseFramework
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
-
+            
             if (GUILayout.Button("Clear Ram"))
-            {
+            {                
                 Debug.Log("Clearing Ram");
-                Resources.UnloadUnusedAssets();
-                UnityEngine.Scripting.GarbageCollector.CollectIncremental(1000000000000);
+                //Debug.Log($"{Mathf.FloorToInt(System.GC.GetTotalMemory(false) / 1000000)} MB RAM Used");
+                //Resources.UnloadUnusedAssets();
+                //UnityEngine.Scripting.GarbageCollector.CollectIncremental(1000000000000);
+
             }
         }
     }
