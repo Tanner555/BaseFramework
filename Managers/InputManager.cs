@@ -332,14 +332,14 @@ namespace BaseFramework
         #endregion
 
         #region Initialization
-        void SubToEvents()
+        protected virtual void SubToEvents()
         {
             gamemaster.OnToggleIsGamePaused += HandleGamePaused;
             uiMaster.EventAnyUIToggle += HandleUiActiveSelf;
             myUnityMsgManager.RegisterOnUpdate(OnUpdateHandler);
         }
 
-        void UnsubFromEvents()
+        protected virtual void UnsubFromEvents()
         {
             gamemaster.OnToggleIsGamePaused -= HandleGamePaused;
             uiMaster.EventAnyUIToggle -= HandleUiActiveSelf;
