@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BaseFramework
 {
-    public class InputManager : MonoBehaviour
+    public class InputManager : BaseSingleton<InputManager>
     {
         #region Properties
         //Time Properties
@@ -34,11 +34,6 @@ namespace BaseFramework
         {
             get { return UnityMsgManager.thisInstance; }
         }
-
-        public static InputManager thisInstance
-        {
-            get; protected set;
-        }
         #endregion
 
         #region Fields
@@ -49,10 +44,7 @@ namespace BaseFramework
         #region UnityMessages
         protected virtual void OnEnable()
         {
-            if (thisInstance != null)
-                Debug.LogWarning("More than one instance of InputManager in scene.");
-            else
-                thisInstance = this;
+
         }
 
         protected virtual void Start()
