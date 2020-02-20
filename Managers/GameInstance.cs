@@ -65,13 +65,15 @@ namespace BaseFramework
         protected virtual void OnEnable()
         {
             //Check If There's More Than One Instance in Scene
-            if(bHasInstance && thisInstance != this)
+            if (bHasInstance && thisInstance != this)
             {
-                Debug.Log("More than one game instance in scene, destroying instance");
-                DestroyImmediate(this.gameObject); 
+                //More than one game instance in scene, destroying instance
+                Destroy(this.gameObject);
             }
-
-            InitializeDictionaryValues();
+            else
+            {
+                InitializeDictionaryValues();
+            }
         }
         #endregion
 
